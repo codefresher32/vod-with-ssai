@@ -1,0 +1,10 @@
+# IDE
+.vscode
+.idea
+
+# Terraform
+.terraform*
+terraform.tfstate*
+
+# Tools
+.tool-versions
