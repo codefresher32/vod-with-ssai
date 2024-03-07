@@ -27,6 +27,12 @@ resource "aws_lambda_function" "vod_source_uploader" {
   role             = aws_iam_role.vod_source_uploader_lambda_role.arn
   source_code_hash = filebase64sha256("${path.module}/function/source-uploader.zip")
   filename         = "${path.module}/function/source-uploader.zip"
+
+  environment {
+    variables = {
+      VOD_SOURCE_BUCKET = aws_s3_bucket.vod_source.id
+    }
+  }
 }
 resource "aws_cloudwatch_log_group" "vod_source_lambda_logGroup" {
   name              = "/aws/lambda/${aws_lambda_function.vod_source_uploader.function_name}"
@@ -67,4 +73,28 @@ resource "aws_lambda_function_url" "vod_source_lambda_functionUrl" {
     allow_methods = ["*"]
     allow_headers = ["*"]
   }
+}
+
+data "aws_iam_policy_document" "vod_source_bucket_policy_document" {
+  provider = aws.iam
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:ListBucket",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "vod_source_bucket_policy" {
+  provider = aws.iam
+  name     = "${var.prefix}-vod-source-bucket-policy"
+  policy   = data.aws_iam_policy_document.vod_source_bucket_policy_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "vod_source_bucket_policy_attachment" {
+  provider   = aws.iam
+  role       = aws_iam_role.vod_source_uploader_lambda_role.name
+  policy_arn = aws_iam_policy.vod_source_bucket_policy.arn
 }

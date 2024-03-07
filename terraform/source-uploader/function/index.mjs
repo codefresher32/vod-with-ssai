@@ -3,8 +3,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 const chunkSize = 5 * 1024 * 1024;
 
 export const handler = async (event) => {
-    const region = 'eu-north-1';
-    const bucket = 'ju-playground';
+    const region = process.env.AWS_REGION;
+    const bucket = process.env.VOD_SOURCE_BUCKET;
     const folder = 'junayed/plays';
     const client = new S3Client({ region });
     const stage = event.queryStringParameters?.stage;
