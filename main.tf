@@ -20,7 +20,6 @@ terraform {
 # }
 
 variable "uploader_ui_port" {}
-variable "uploader_ui_port" {}
 module "aws_elemental_video_pipeline" {
   source           = "./terraform"
   uploader_ui_port = var.uploader_ui_port
