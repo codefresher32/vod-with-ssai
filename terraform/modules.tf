@@ -17,3 +17,8 @@
 #   source = "./mediapackage"
 #   prefix = var.prefix
 # }
+module "source-uploader" {
+  source           = "./source-uploader"
+  prefix           = var.prefix
+  uploader_ui_port = var.uploader_ui_port
+}

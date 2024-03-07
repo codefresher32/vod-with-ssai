@@ -1,7 +1,5 @@
-variable "prefix" {
-  type        = string
-  description = "AWS Resources name prefix"
-}
+variable "prefix" {}
+variable "uploader_ui_port" {}
 
 # variable "billing_tag" {
 #   type        = string

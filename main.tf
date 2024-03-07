@@ -20,11 +20,12 @@ terraform {
 # }
 
 variable "uploader_ui_port" {}
+variable "uploader_ui_port" {}
 module "aws_elemental_video_pipeline" {
-  source = "./terraform"
+  source           = "./terraform"
   uploader_ui_port = var.uploader_ui_port
-  prefix = "simple-elemental"
-
+  prefix           = "simple-elemental"
+  
   # mediaconnect_settings = {
   #   mediaconnect_protocol  = "srt-listener"
   #   whitelist_cidr_address = "${data.http.current_ip.response_body}/32"

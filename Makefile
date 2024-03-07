@@ -14,7 +14,7 @@ define get_output
 endef
 
 tf-init:
-	$(run_docker) ${TERRAFORM_IMAGE} init
+	./build-lambdas.sh && $(run_docker) ${TERRAFORM_IMAGE} init
 
 tf-plan:
 	$(run_docker) ${TERRAFORM_IMAGE} plan
