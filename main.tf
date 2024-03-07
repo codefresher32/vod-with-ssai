@@ -19,9 +19,11 @@ terraform {
 #   url = "https://api.ipify.org"
 # }
 
+variable "uploader_ui_port" {}
 module "aws_elemental_video_pipeline" {
   source = "./terraform"
-  # prefix = "simple-elemental"
+  uploader_ui_port = var.uploader_ui_port
+  prefix = "simple-elemental"
 
   # mediaconnect_settings = {
   #   mediaconnect_protocol  = "srt-listener"
