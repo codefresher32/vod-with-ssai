@@ -1,6 +1,6 @@
 variable "prefix" {}
 variable "uploader_ui_port" {}
-}
+
 # variable "billing_tag" {
 #   type        = string
 #   description = "AWS billing tag value"
