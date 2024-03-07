@@ -1,11 +1,6 @@
 variable "prefix" {}
 variable "uploader_ui_port" {}
 }
-variable "s3_cors_max_age_seconds" {
-  type        = number
-  default = 3600
-}
-
 # variable "billing_tag" {
 #   type        = string
 #   description = "AWS billing tag value"
