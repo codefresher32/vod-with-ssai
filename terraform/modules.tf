@@ -21,4 +21,8 @@ module "source-uploader" {
   source           = "./source-uploader"
   prefix           = var.prefix
   uploader_ui_port = var.uploader_ui_port
+  providers = {
+    aws     = aws
+    aws.iam = aws.iam
+  }
 }
