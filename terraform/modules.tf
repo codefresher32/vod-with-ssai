@@ -26,3 +26,11 @@ module "source-uploader" {
     aws.iam = aws.iam
   }
 }
+module "media-convert" {
+  source        = "./mediaConvert"
+  prefix        = var.prefix
+  providers = {
+    aws     = aws
+    aws.iam = aws.iam
+  }
+}
