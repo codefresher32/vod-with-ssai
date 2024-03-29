@@ -5,7 +5,7 @@ const chunkSize = 5 * 1024 * 1024;
 export const handler = async (event) => {
     const region = process.env.AWS_REGION;
     const bucket = process.env.VOD_SOURCE_BUCKET;
-    const folder = 'junayed/plays';
+    const folder = 'input-source';
     const client = new S3Client({ region });
     const stage = event.queryStringParameters?.stage;
     console.log(JSON.stringify(event, null, 2))

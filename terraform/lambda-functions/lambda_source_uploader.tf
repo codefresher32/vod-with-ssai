@@ -1,19 +1,23 @@
 
+locals {
+  source_uploader_lambda_name = "vod-source-uploader"
+}
+data "aws_iam_policy_document" "vod_source_uploader_lambda_policy_document" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
 resource "aws_iam_role" "vod_source_uploader_lambda_role" {
-  provider = aws.iam
-  name     = "${var.prefix}-vod-source-uploader-lambda-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Sid    = ""
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-      }
-    ]
-  })
+  provider           = aws.iam
+  name               = "${var.prefix}-${local.source_uploader_lambda_name}-lambda-role"
+  assume_role_policy = data.aws_iam_policy_document.vod_source_uploader_lambda_policy_document.json
 }
 resource "aws_iam_role_policy_attachment" "vod_source_uploader_basicExecution_policy_attachment" {
   role       = aws_iam_role.vod_source_uploader_lambda_role.name
@@ -21,16 +25,16 @@ resource "aws_iam_role_policy_attachment" "vod_source_uploader_basicExecution_po
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 resource "aws_lambda_function" "vod_source_uploader" {
-  function_name    = "${var.prefix}-vod-source-uploader"
+  function_name    = "${var.prefix}-${local.source_uploader_lambda_name}"
   handler          = "index.handler"
   runtime          = var.lambda_runtime
   role             = aws_iam_role.vod_source_uploader_lambda_role.arn
-  source_code_hash = filebase64sha256("${path.module}/function/source-uploader.zip")
-  filename         = "${path.module}/function/source-uploader.zip"
+  source_code_hash = filebase64sha256("${path.module}/zipped-lambdas/source-uploader.zip")
+  filename         = "${path.module}/zipped-lambdas/source-uploader.zip"
 
   environment {
     variables = {
-      VOD_SOURCE_BUCKET = aws_s3_bucket.vod_source.id
+      VOD_SOURCE_BUCKET = var.vod_source_bucket_name
     }
   }
 }
@@ -56,7 +60,7 @@ data "aws_iam_policy_document" "vod_source_lambda_policy_document_cwLogs" {
 }
 resource "aws_iam_policy" "vod_source_lambda_policy_cwLogs" {
   provider = aws.iam
-  name     = "vod-source-lambda_policy_cwLogs"
+  name     = "${var.prefix}-${local.source_uploader_lambda_name}-lambda-policy-cwLogs"
   policy   = data.aws_iam_policy_document.vod_source_lambda_policy_document_cwLogs.json
 }
 resource "aws_iam_role_policy_attachment" "vod_source_lambda_policy_attachment_cwLogs" {
@@ -89,7 +93,7 @@ data "aws_iam_policy_document" "vod_source_bucket_policy_document" {
 
 resource "aws_iam_policy" "vod_source_bucket_policy" {
   provider = aws.iam
-  name     = "${var.prefix}-vod-source-bucket-policy"
+  name     = "${var.prefix}-${local.source_uploader_lambda_name}-bucket-policy"
   policy   = data.aws_iam_policy_document.vod_source_bucket_policy_document.json
 }
 

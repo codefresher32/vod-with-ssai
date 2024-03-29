@@ -17,18 +17,23 @@
 #   source = "./mediapackage"
 #   prefix = var.prefix
 # }
-module "source-uploader" {
-  source           = "./source-uploader"
-  prefix           = var.prefix
-  uploader_ui_port = var.uploader_ui_port
+module "lambda-functions" {
+  depends_on                     = [ module.media-convert ]
+  source                         = "./lambda-functions"
+  prefix                         = var.prefix
+  vod_source_bucket_name         = aws_s3_bucket.vod_source.bucket
+  mediaconvert_job_template_name = module.media-convert.media_convert_job_template_name
+  mediaconvert_endpoint          = var.mediaconvert_endpoint
+  mediaconvert_role_arn          = module.media-convert.media_convert_role_arn
   providers = {
     aws     = aws
     aws.iam = aws.iam
   }
 }
 module "media-convert" {
-  source        = "./mediaConvert"
-  prefix        = var.prefix
+  source                 = "./mediaConvert"
+  prefix                 = var.prefix
+  vod_source_bucket_name = aws_s3_bucket.vod_source.bucket
   providers = {
     aws     = aws
     aws.iam = aws.iam

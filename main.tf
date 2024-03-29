@@ -28,9 +28,11 @@ provider "aws" {
 }
 
 variable "uploader_ui_port" {}
+variable "mediaconvert_endpoint" {}
 module "aws_elemental_video_pipeline" {
   source           = "./terraform"
   uploader_ui_port = var.uploader_ui_port
+  mediaconvert_endpoint = var.mediaconvert_endpoint
   prefix           = "simple-elemental"
 
   providers = {

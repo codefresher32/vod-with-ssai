@@ -4,7 +4,7 @@ variable "prefix" {
 }
 
 variable "job_template_suffix" {
-  type = string
+  type    = string
   default = "hls-only"
 }
 
@@ -16,21 +16,25 @@ variable "subtitle_conversions_video_configs" {
 }
 
 variable "status_update_interval" {
+  type    = string
   default = "SECONDS_60"
 }
 
 variable "category" {
+  type    = string
   default = "hls-only"
 }
 
 variable "description" {
+  type    = string
   default = "hls-only"
 }
-
-
+variable "vod_source_bucket_name" {
+  type = string
+}
 
 variable "audio_config" {
-  type = list(object({bitrate : number, sample_rate:number, name_modifier:string, audio_track_type:string, audio_selector_name:string  }))
+  type = list(object({ bitrate : number, sample_rate : number, name_modifier : string, audio_track_type : string, audio_selector_name : string }))
   default = [
     {
       audio_selector_name : "Audio Selector 1",

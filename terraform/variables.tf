@@ -1,5 +1,10 @@
 variable "prefix" {}
 variable "uploader_ui_port" {}
+variable "mediaconvert_endpoint" {}
+variable "s3_cors_max_age_seconds" {
+  type    = number
+  default = 3600
+}
 
 # variable "billing_tag" {
 #   type        = string
