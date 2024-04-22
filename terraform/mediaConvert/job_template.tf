@@ -24,7 +24,6 @@ locals {
   ])
   hls_output_group_rendered = [jsondecode(templatefile("${path.module}/templates/hls-output-group.json.tpl", {
     outputs        = jsonencode(concat(local.hls_video_outputs_rendered, local.hls_audio_outputs_rendered))
-    outputLocation = "s3://${var.vod_source_bucket_name}/output-video/hls/"
   }))]
   settings_rendered = templatefile("${path.module}/templates/jobtemplate-settings.json.tpl", {
     output_groups = jsonencode(concat(local.hls_output_group_rendered))

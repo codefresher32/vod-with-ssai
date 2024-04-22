@@ -1,10 +1,26 @@
+# global variable
+variable "uploader_ui_port" {}
+variable "mediaconvert_endpoint" {}
+variable "prefix" {
+  default = "simple-elemental"
+}
+variable "hosted_zone" {
+  type = object({
+    zone_id     = string
+    domain_name = string
+  })
+}
+variable "sourceUploadFolder" {
+  default = "input-source"
+}
+
 terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 5.0"
       configuration_aliases = [
-        aws.iam,
+        aws.iam, aws.cloudfront
       ]
     }
   }
@@ -26,18 +42,24 @@ provider "aws" {
   region = "eu-north-1"
   alias  = "iam"
 }
+provider "aws" {
+  region = "us-east-1"
+  alias  = "cloudfront"
+}
 
-variable "uploader_ui_port" {}
-variable "mediaconvert_endpoint" {}
+
 module "aws_elemental_video_pipeline" {
-  source           = "./terraform"
-  uploader_ui_port = var.uploader_ui_port
+  source                = "./terraform"
+  uploader_ui_port      = var.uploader_ui_port
   mediaconvert_endpoint = var.mediaconvert_endpoint
-  prefix           = "simple-elemental"
+  prefix                = var.prefix
+  hosted_zone           = var.hosted_zone
+  sourceUploadFolder    = var.sourceUploadFolder
 
   providers = {
-    aws     = aws
-    aws.iam = aws.iam
+    aws            = aws
+    aws.iam        = aws.iam,
+    aws.cloudfront = aws.cloudfront
   }
 
   # mediaconnect_settings = {

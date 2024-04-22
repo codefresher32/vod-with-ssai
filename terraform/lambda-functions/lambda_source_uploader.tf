@@ -34,7 +34,8 @@ resource "aws_lambda_function" "vod_source_uploader" {
 
   environment {
     variables = {
-      VOD_SOURCE_BUCKET = var.vod_source_bucket_name
+      VOD_SOURCE_BUCKET    = var.vod_source_bucket_name
+      SOURCE_UPLOAD_FOLDER = var.sourceUploadFolder
     }
   }
 }

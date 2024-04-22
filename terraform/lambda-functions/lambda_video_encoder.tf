@@ -38,6 +38,7 @@ resource "aws_lambda_function" "video_encoder" {
       MEDIA_CONVERT_JOB_TEMPLATE_NAME = var.mediaconvert_job_template_name
       MEDIA_CONVERT_ENDPOINT          = var.mediaconvert_endpoint
       MEDIA_CONVERT_ROLE_ARN          = var.mediaconvert_role_arn
+      SOURCE_UPLOAD_FOLDER            = var.sourceUploadFolder 
     }
   }
 }

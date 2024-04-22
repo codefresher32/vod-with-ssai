@@ -18,3 +18,12 @@ variable "mediaconvert_endpoint" {
 variable "mediaconvert_role_arn" {
   type = string
 }
+variable "sourceUploadFolder" {
+  type = string
+}
+variable "vod_source_cloudfront_domain" {
+  type = string
+}
+variable "vod_source_bucket_arn" {
+  type = string
+}

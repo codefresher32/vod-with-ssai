@@ -5,7 +5,6 @@
     "Type": "HLS_GROUP_SETTINGS",
     "HlsGroupSettings": {
       "ManifestDurationFormat": "INTEGER",
-      "Destination": "${outputLocation}",
       "SegmentLength": 10,
       "TimedMetadataId3Period": 10,
       "CaptionLanguageSetting": "OMIT",

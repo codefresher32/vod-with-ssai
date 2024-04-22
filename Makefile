@@ -1,8 +1,8 @@
 AWS_REGION?=eu-north-1
-TERRAFORM_VERSION=1.6.4
+TERRAFORM_VERSION=1.7.5
 AWS_CLI_IMAGE=amazon/aws-cli
 TERRAFORM_IMAGE=hashicorp/terraform:${TERRAFORM_VERSION}
-DOCKER_ENV=-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION -e AWS_PROFILE -e AWS_REGION -e TF_VAR_uploader_ui_port -e TF_VAR_mediaconvert_endpoint
+DOCKER_ENV=-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION -e AWS_PROFILE -e AWS_REGION -e TF_VAR_uploader_ui_port -e TF_VAR_mediaconvert_endpoint -e TF_VAR_hosted_zone
 DOCKER_RUN_MOUNT_OPTIONS=-v ${CURDIR}/:/app -v ${CREDENTIAL_DIR}/:/root/.aws -w /app
 
 define run_docker

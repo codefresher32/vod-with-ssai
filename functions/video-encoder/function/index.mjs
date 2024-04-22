@@ -1,8 +1,10 @@
 import { MediaConvertClient, GetJobTemplateCommand, CreateJobCommand } from "@aws-sdk/client-mediaconvert";
+import { generateEsamScript } from './esam_maker.mjs';
 
 export const handler = async (event) => {
-    const { MEDIA_CONVERT_ENDPOINT, MEDIA_CONVERT_JOB_TEMPLATE_NAME, MEDIA_CONVERT_ROLE_ARN } = process.env;
+    const { MEDIA_CONVERT_ENDPOINT, MEDIA_CONVERT_JOB_TEMPLATE_NAME, MEDIA_CONVERT_ROLE_ARN, VOD_SOURCE_BUCKET, SOURCE_UPLOAD_FOLDER } = process.env;
     const eventBody = JSON.parse(event.body);
+    const destinationFolder = `outputs/${eventBody.contentId}`
     console.log(JSON.stringify(eventBody, null, 2));
 
     const client = new MediaConvertClient({
@@ -17,17 +19,32 @@ export const handler = async (event) => {
     const jobSettings = {
         ...jobTemplate.Settings
     };
-    if (eventBody.videoSourceLocation?.length === jobTemplate.Settings.Inputs.length) {
-        const Inputs = jobTemplate.Settings.Inputs.map((input, index) => ({ ...input, FileInput: eventBody.videoSourceLocation[index] }));
-        jobSettings.Inputs = Inputs;
-    };
-    if (eventBody.manifestConfirmConditionNotificationContent?.length && eventBody.signalProcessingNotificationContent?.length) {
+
+    const Inputs = jobTemplate.Settings.Inputs.map((input, index) => ({ ...input, FileInput: `s3://${VOD_SOURCE_BUCKET}/${SOURCE_UPLOAD_FOLDER}/${eventBody.contentId}` }));
+    jobSettings.Inputs = Inputs;
+
+    const generatedEsamMarker = generateEsamScript({adBreaks: eventBody.adBreaks });
+
+    if (generatedEsamMarker.manifestConfirmConditionNotificationContent?.length && generatedEsamMarker.signalProcessingNotificationContent?.length) {
         jobSettings.Esam = {
-            ManifestConfirmConditionNotification: { MccXml: eventBody.manifestConfirmConditionNotificationContent },
-            SignalProcessingNotification: { SccXml: eventBody.signalProcessingNotificationContent },
+            ManifestConfirmConditionNotification: { MccXml: generatedEsamMarker.manifestConfirmConditionNotificationContent },
+            SignalProcessingNotification: { SccXml: generatedEsamMarker.signalProcessingNotificationContent },
             ResponseSignalPreroll: 4000
         };
     };
+    if (eventBody.contentId.length) {
+        const outputGroups = jobSettings.OutputGroups.map((outputGroup) => ({
+            ...outputGroup,
+            OutputGroupSettings: {
+                ...outputGroup.OutputGroupSettings,
+                HlsGroupSettings: {
+                    ...outputGroup.OutputGroupSettings.HlsGroupSettings,
+                    Destination: `s3://${VOD_SOURCE_BUCKET}/${destinationFolder}/hls/`
+                }
+            }
+        }));
+        jobSettings.OutputGroups = outputGroups
+    }
     const jobInput = {
         Role: MEDIA_CONVERT_ROLE_ARN,
         Queue: jobTemplate.Queue,
@@ -45,6 +62,7 @@ export const handler = async (event) => {
 
 
 /*
+contentId:""
 videoSourceLocation: []
 manifestConfirmConditionNotificationContent
 signalProcessingNotificationContent
