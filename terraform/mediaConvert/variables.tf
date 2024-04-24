@@ -49,7 +49,6 @@ variable "audio_config" {
 variable "video_configs" {
   type = list(object({ height : number, width : number, bitrate : number, hrd_buffer_size : number, name_modifier : string }))
   default = [
-    { height : 360, width : 640, bitrate : 600000, hrd_buffer_size : 1200000, name_modifier : "600" },
     { height : 540, width : 960, bitrate : 1500000, hrd_buffer_size : 2400000, name_modifier : "1500" }
   ]
 }

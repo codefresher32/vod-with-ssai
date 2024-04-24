@@ -6,13 +6,6 @@ variable "s3_cors_max_age_seconds" {
   type    = number
   default = 3600
 }
-variable "hosted_zone" {
-  type = object({
-    zone_id     = string
-    domain_name = string
-  })
-}
-
 # variable "billing_tag" {
 #   type        = string
 #   description = "AWS billing tag value"

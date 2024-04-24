@@ -1,5 +1,4 @@
 locals {
-  mediatailor_cloudfront_hostname = "${var.prefix}.vod-ads.${var.hosted_zone.domain_name}"
   content_origin = {
     origin_id            = "content-origin"
     origin_domain        = var.vod_source_cloudfront_domain
@@ -11,11 +10,11 @@ locals {
   }
   mediatailor_playback_origin = {
     origin_id                       = "mediatailor-manifests"
-    origin_domain                   = replace(awsmt_playback_configuration.playback_configuration.playback_endpoint_prefix, "https://", ""),
+    origin_domain                   = replace(aws_cloudformation_stack.mediatailor.outputs["PlaybackEndpointPrefix"], "https://", ""),
     menifest_root_origin_path       = "/v1"
     menifest_root_origin_id         = "mediatailor-manifests_root"
     hls_master_manifest_origin_id   = "mediatailor-manifests_hls-master"
-    hls_master_manifest_origin_path = trimsuffix(replace(awsmt_playback_configuration.playback_configuration.hls_configuration_manifest_endpoint_prefix, awsmt_playback_configuration.playback_configuration.playback_endpoint_prefix, ""), "/")
+    hls_master_manifest_origin_path = trimsuffix(replace(aws_cloudformation_stack.mediatailor.outputs["HlsConfigurationManifestEndpointPrefix"], aws_cloudformation_stack.mediatailor.outputs["PlaybackEndpointPrefix"], ""), "/")
   }
   mediatailor_cloudfront_origins = [
     {

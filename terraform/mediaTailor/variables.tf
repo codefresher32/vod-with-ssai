@@ -167,12 +167,6 @@ variable "cors_with_preflight_response_header_policy_id" {
   type    = string
   default = ""
 }
-variable "hosted_zone" {
-  type = object({
-    zone_id     = string
-    domain_name = string
-  })
-}
 variable "vod_source_cloudfront_domain" {
   type = string
 }

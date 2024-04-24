@@ -14,7 +14,7 @@ const App = () => {
   }
   const uploadLambdaUrl = "https://desn6cie5gaspaewu4j6x6qrga0ibone.lambda-url.eu-north-1.on.aws";
   const videoEncoderLambdaUrl = "https://bxmx66km7scktscfeu2qsfji5e0hkoqc.lambda-url.eu-north-1.on.aws";
-  const playbackBaseUrl = "https://simple-elemental.vod-ads.eu-north-1-dev.vmnd.tv"
+  const playbackBaseUrl = "https://d1uvm016ude8zr.cloudfront.net"
   
 
   const chunkFile = ({ chunkSize }) => {

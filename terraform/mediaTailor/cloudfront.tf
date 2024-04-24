@@ -35,8 +35,6 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
 resource "aws_cloudfront_distribution" "cf_distribution_mediatailor" {
-  depends_on = [aws_acm_certificate_validation.static_mediatailor_cert_validation]
-  aliases    = [local.mediatailor_cloudfront_hostname]
   comment    = "${var.prefix}-mediatailor"
   web_acl_id = var.web_acl_id
 
@@ -102,8 +100,6 @@ resource "aws_cloudfront_distribution" "cf_distribution_mediatailor" {
     }
   }
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate_validation.static_mediatailor_cert_validation.certificate_arn
-    ssl_support_method       = var.ssl_support_method
-    minimum_protocol_version = var.minimum_protocol_version
+    cloudfront_default_certificate = true
   }
 }

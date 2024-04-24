@@ -46,14 +46,14 @@ module "media-convert" {
 module "media-Tailor" {
   source                                        = "./mediaTailor"
   prefix                                        = var.prefix
-  hosted_zone                                   = var.hosted_zone
   cors_with_preflight_response_header_policy_id = aws_cloudfront_response_headers_policy.cors_with_preflight_response_header_policy.id
   vod_source_cloudfront_domain                  = module.vod_source.vod_source_cloudfront_domain
   ad_decision_server_url                        = module.lambda-functions.ad_decision_server_url
   providers = {
-    aws            = aws
-    aws.iam        = aws.iam
-    aws.cloudfront = aws.cloudfront
+    aws             = aws
+    aws.iam         = aws.iam
+    aws.cloudfront  = aws.cloudfront
+    aws.mediatailor = aws.mediatailor
   }
 }
 
