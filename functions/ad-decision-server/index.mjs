@@ -42,57 +42,54 @@ const findAdFileByPreferencesAndDuration = async ({ durationInSecond, adPreferen
     }
 
 }
-const generateVastContent = ({preference = 'default', duration=30, fileUri ='ads/vimond_travel_hd_travel_10.mp4' }) => {
-
-    const adSystem = "2.0";
+const generateVastCreatives = ({ preference = 'default', duration = 30, fileUri = 'ads/vimond_video_services_travel_30.mp4' }) => {
     const mediaFileDeliveryType = "progressive";
     const mediaFileType = "video/mp4";
     const mediaFileHeight = "1080";
     const mediaFileWidth = "1920";
     const { VOD_SOURCE_BUCKET_CDN_DOMAIN } = process.env;
 
-    const vastContent =
-        `<Ad>
-            <InLine>
-                <AdSystem>${adSystem}</AdSystem>
-                <AdTitle>${preference}</AdTitle>
-                <Impression/>
-                <Creatives>
-                    <Creative>
-                        <Linear>
-                            <Duration>${duration}</Duration>
-                            <MediaFiles>
-                                <MediaFile delivery="${mediaFileDeliveryType}" type="${mediaFileType}" width="${mediaFileWidth}" height="${mediaFileHeight}">
-                                    <![CDATA[https://${VOD_SOURCE_BUCKET_CDN_DOMAIN}/${fileUri}]]>
-                                </MediaFile>
-                            </MediaFiles>
-                        </Linear>
-                    </Creative>
-                </Creatives>
-            </InLine>
-       </Ad>`
-       return vastContent;
+    const creativeContent =
+        `<Creative>
+            <Linear>
+                <Duration>${duration}</Duration>
+                <MediaFiles>
+                    <MediaFile delivery="${mediaFileDeliveryType}" type="${mediaFileType}" width="${mediaFileWidth}" height="${mediaFileHeight}">https://${VOD_SOURCE_BUCKET_CDN_DOMAIN}/${fileUri}</MediaFile>
+                </MediaFiles>
+            </Linear>
+        </Creative>
+       `
+    return creativeContent;
 }
 
-const generateAdContent = async ({ durationsInSeconds, adPreferences }) => {
+const generateAdContent = async ({ durationsInSeconds, adPreferences, availIndex }) => {
     const vastVersion = "3.0";
-    const durations =  durationsInSeconds.split('_').map((durationInSecond)=> Number(durationInSecond));
+    const durations = durationsInSeconds.split('_').map((durationInSecond) => Number(durationInSecond));
     const preferences = adPreferences.split('_');
+    const adSystem = "2.0";
+    const preferIndex = Number(availIndex)-1;
 
-    let vastContent = '';
-    if (durations.length && adPreferences.length && durations.length === adPreferences.length) {
-        for (let index = 0; index < durations.length; index++) {
-            const matchedFile = (await findAdFileByPreferencesAndDuration({ durationInSecond: durations[index], adPreference: preferences[index] })) ?? defaultFile;
-            vastContent += generateVastContent({duration: durations[index], duration: durations[index], fileUri: matchedFile  });
-        }
-    }else{
-        vastContent += generateVastContent({});
+    let creatives = '';
+    if (durations.length && preferences.length && durations.length === preferences.length) {
+        const matchedFile = (await findAdFileByPreferencesAndDuration({ durationInSecond: durations[preferIndex], adPreference: preferences[preferIndex] })) ?? defaultFile;
+        creatives = generateVastCreatives({ preference: preferences[preferIndex], duration: durations[preferIndex], fileUri: matchedFile });
+    } else {
+        creatives = generateVastCreatives({});
     }
 
     const xmlResponse = `
-    <VAST version="${vastVersion}">
-        ${vastContent}
-    </VAST>`
+        <VAST version="${vastVersion}">
+            <Ad>
+                <InLine>
+                    <AdSystem>${adSystem}</AdSystem>
+                    <AdTitle>${adPreferences}</AdTitle>
+                    <Impression/>
+                    <Creatives>
+                        ${creatives}
+                    </Creatives>
+                </InLine>
+            </Ad>
+        </VAST>`
     return xmlResponse;
 }
 
@@ -105,9 +102,9 @@ export const handler = async (event) => {
         }
     };
     if (event.queryStringParameters.durationsInSeconds.length && event.queryStringParameters.adPreferences.length) {
-        const vastContent = await generateAdContent({ durationsInSeconds: event.queryStringParameters.durationsInSeconds, adPreferences: event.queryStringParameters.adPreferences });
+        const vastContent = await generateAdContent({ durationsInSeconds: event.queryStringParameters.durationsInSeconds, adPreferences: event.queryStringParameters.adPreferences, availIndex: event.queryStringParameters.availIndex });
         response.body = vastContent;
-    }else{
+    } else {
         const vastContent = await generateAdContent({ durationsInSeconds: '', adPreferences: '' });
         response.body = vastContent;
     }

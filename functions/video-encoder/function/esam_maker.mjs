@@ -39,13 +39,13 @@ const putSccPoint = (adBreak, relativeId) => {
       </ResponseSignal>`;
   return sccPoint;
 }
-const putMccPoints = (relativeId) => {
+const putMccPoints = (adBreak, relativeId) => {
   const conditionalDuration = 0;
   const mccPoint =
     `<ManifestResponse acquisitionPointIdentity="${mccConstants.acquisitionPointIdentity}" acquisitionSignalID="${relativeId}" duration="PT${conditionalDuration}S" dataPassThrough="${mccConstants.dataPassThrough}">
           <SegmentModify>
               <FirstSegment>
-                  <Tag value="#EXT-X-CUE-OUT:${conditionalDuration}" />
+                  <Tag value="#EXT-X-CUE-OUT:${adBreak.durationInSecond}" />
               </FirstSegment>
               <LastSegment>
                   <Tag value="#EXT-X-CUE-IN" locality="${mccConstants.locality}" adapt="${mccConstants.adapt}" />
@@ -65,7 +65,7 @@ export const generateEsamScript = ({ adBreaks }) => {
     adBreaks.forEach((adBreak) => {
       relativeId += 10;
       sccPoints += putSccPoint(adBreak, relativeId);
-      mccPoints += putMccPoints(relativeId);
+      mccPoints += putMccPoints(adBreak, relativeId);
     });
     const fullScc =
     `<SignalProcessingNotification xmlns="${sccConstants.xmlns}" xmlns:sig="${sccConstants.xmlns_sig}" xmlns:common="${sccConstants.xmlns_common}" xmlns:xsi="${sccConstants.xmlns_xsi}">

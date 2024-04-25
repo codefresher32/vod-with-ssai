@@ -10,7 +10,7 @@ resource "aws_cloudformation_stack" "mediatailor" {
   template_body = templatefile("${path.module}/templates/mediatailor_cloudformation.json.tpl",
     {
       name                          = "${var.prefix}-vod-ads"
-      ad_decision_server_url        = "${var.ad_decision_server_url}?adPreferences=[player_params.adPreferences]&durationsInSeconds=[player_params.durationsInSeconds]"
+      ad_decision_server_url        = "${var.ad_decision_server_url}?availIndex=[avail.index]&adPreferences=[player_params.adPreferences]&durationsInSeconds=[player_params.durationsInSeconds]"
       avail_suppression_mode        = var.avail_suppression_mode
       ad_segment_url_prefix         = "https://${local.mediatailor_cloudfront_hostname}/"
       content_segment_url_prefix    = "https://${local.mediatailor_cloudfront_hostname}/"
