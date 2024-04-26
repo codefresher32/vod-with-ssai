@@ -25,10 +25,6 @@ terraform {
   }
 }
 
-# data "http" "current_ip" {
-#   url = "https://api.ipify.org"
-# }
-
 provider "aws" {
   region = "eu-north-1"
 }
@@ -58,10 +54,4 @@ module "aws_elemental_video_pipeline" {
     aws.cloudfront  = aws.cloudfront
     aws.mediatailor = aws.mediatailor
   }
-
-  # mediaconnect_settings = {
-  #   mediaconnect_protocol  = "srt-listener"
-  #   whitelist_cidr_address = "${data.http.current_ip.response_body}/32"
-  #   ingest_port            = 5000
-  # }
 }
