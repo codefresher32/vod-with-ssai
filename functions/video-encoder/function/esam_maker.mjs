@@ -45,7 +45,7 @@ const putMccPoints = (adBreak, relativeId) => {
     `<ManifestResponse acquisitionPointIdentity="${mccConstants.acquisitionPointIdentity}" acquisitionSignalID="${relativeId}" duration="PT${conditionalDuration}S" dataPassThrough="${mccConstants.dataPassThrough}">
           <SegmentModify>
               <FirstSegment>
-                  <Tag value="#EXT-X-CUE-OUT:${adBreak.durationInSecond}" />
+                  <Tag value="#EXT-X-CUE-OUT:${conditionalDuration}" />
               </FirstSegment>
               <LastSegment>
                   <Tag value="#EXT-X-CUE-IN" locality="${mccConstants.locality}" adapt="${mccConstants.adapt}" />
