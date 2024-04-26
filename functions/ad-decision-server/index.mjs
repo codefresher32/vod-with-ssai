@@ -70,7 +70,7 @@ const generateAdContent = async ({ durationsInSeconds, adPreferences, availIndex
     const preferIndex = Number(availIndex)-1;
 
     let creatives = '';
-    if (durations.length && preferences.length && durations.length === preferences.length) {
+    if (durations.length >1 && preferences.length && durations.length === preferences.length) {
         const matchedFile = (await findAdFileByPreferencesAndDuration({ durationInSecond: durations[preferIndex], adPreference: preferences[preferIndex] })) ?? defaultFile;
         creatives = generateVastCreatives({ preference: preferences[preferIndex], duration: durations[preferIndex], fileUri: matchedFile });
     } else {
