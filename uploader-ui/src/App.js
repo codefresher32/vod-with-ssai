@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import VideoPlayer from './VideoPlayer';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
+  const toastId = useRef(null);
   const [file, setFile] = useState();
   const [adBreaks, setAdBreaks] = useState([]);
   const [playbackUrl, setPlaybackUrl] = useState('');
   const [contentId, setContentId] = useState('');
-  const[uploaded, setUploaded ] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+
   const adsItem = {
     adPreferences: 'sports',
     startTimeInSecond: 0,
@@ -101,11 +105,22 @@ const App = () => {
     return uploadedParts;
   }
 
+  const progressNotify = () => {
+    toastId.current = toast.loading('Video file uploading.....');
+  };
+
+  const successNotify = () => {
+    toast.dismiss(toastId.current);
+    toast.success('Video file uploaded successfully!');
+  };
+
   const uploadFile = async () => {
+    progressNotify();
     const initialResponse = await getUploadIdAndFileKey();
     const uploadPartsResponse = await startUpload(initialResponse);
     const completeResponse = await completeMultiPartUpload({ fileKey: initialResponse.key, uploadId: initialResponse.uploadId, parts: uploadPartsResponse })
     setUploaded(true);
+    successNotify();
     console.log(uploadPartsResponse);
     console.log(completeResponse);
   }
@@ -148,7 +163,14 @@ const App = () => {
   return (
     <div className="App" style={{ padding: '2%' }}>
       <input type="file" onChange={(event) => onFileChange(event)}></input>
-      <button onClick={() => uploadFile()} style={{ margin: '5%' }} disabled={contentId.length === 0 } >Upload</button>
+      <button onClick={() => uploadFile()} style={{ margin: '5%' }} disabled={contentId.length === 0} >Upload</button>
+      <ToastContainer
+        position="top-right"
+        newestOnTop={true}
+        pauseOnFocusLoss
+        pauseOnHover
+        hideProgressBar={false}
+      />
       <div style={{ marginTop: '1%' }}>
         <label htmlFor="ContentId">Content Id: </label>
         <input type="text" style={{ margin: '1%' }} value={contentId} name="contentId" onChange={(event) => setContentId(event.target.value)} />

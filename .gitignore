@@ -10,3 +10,5 @@ terraform.tfstate*
 .tool-versions
 *.zip
 .DS_Store*
+
+.env
