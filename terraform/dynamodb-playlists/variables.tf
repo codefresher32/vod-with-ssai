@@ -3,14 +3,14 @@ variable "prefix" {
   description = "AWS Resources name prefix"
 }
 
-variable "events_table_billing_mode" {
+variable "playlists_table_billing_mode" {
   default = "PROVISIONED"
 }
 
-variable "events_table_read_capacity" {
+variable "playlists_table_read_capacity" {
   default = 5
 }
 
-variable "events_table_write_capacity" {
+variable "playlists_table_write_capacity" {
   default = 5
 }

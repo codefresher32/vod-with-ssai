@@ -34,6 +34,7 @@ resource "aws_lambda_function" "content_curator_lambda" {
     variables = {
       VOD_SOURCE_BUCKET_CDN_DOMAIN     = var.vod_source_cloudfront_domain
       VOD_SOURCE_BUCKET                = var.vod_source_bucket_name
+      PLAYLISTS_DYNAMODB_TABLE         = "${var.prefix}-video-playlists"
     }
   }
 }
