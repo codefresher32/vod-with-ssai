@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import VideoPlayer from './VideoPlayer';
 import 'react-toastify/dist/ReactToastify.css';
+import './ContentCreator.css'
 
 const ContentCreator = () => {
   const toastId = useRef(null);

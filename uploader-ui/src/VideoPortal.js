@@ -29,16 +29,6 @@ const videos = [
         title: "Create profiles for kids",
         description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
         thumbnail: "https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-    },
-    {
-        title: "Create profiles for kids",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-    },
-    {
-        title: "Create profiles for kids",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     }
 ]
 
