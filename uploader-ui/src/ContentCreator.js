@@ -10,6 +10,7 @@ const ContentCreator = () => {
   const [playbackUrl, setPlaybackUrl] = useState('');
   const [contentId, setContentId] = useState('');
   const [uploaded, setUploaded] = useState(false);
+  const [image, setImage] = useState(null);
 
   const adsItem = {
     adPreferences: 'sports',
@@ -149,6 +150,31 @@ const ContentCreator = () => {
 
   }
 
+  const blobImgToBase64 = (blobImg) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blobImg);
+    return new Promise(resolve => {
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+    });
+  };
+
+  const takeSnapshot = async () => {
+    const video = document.querySelector('video');
+    const { videoWidth, videoHeight } = video;
+    const canvas = document.createElement('canvas');
+    canvas.width = parseInt(videoWidth, 10);
+    canvas.height = parseInt(videoHeight, 10);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+    const blobImg = await new Promise(resolve => {
+      canvas.toBlob(resolve, 'image/jpeg');
+    });
+    const base64Img =  await blobImgToBase64(blobImg);
+    setImage(base64Img);
+  };
+
   const setPlayer = ()=>{
     setPlaybackUrl('')
     const manifestUrl = `${playbackBaseUrl}/outputs/${contentId}/hls/${contentId}.m3u8`;
@@ -200,6 +226,8 @@ const ContentCreator = () => {
       <button disabled={contentId.length === 0} style={{ margin: '1%' }} onClick={()=>setPlayer()}>Play Your Content</button>
       <p>{playbackUrl}</p>
       <VideoPlayer manifestUrl={playbackUrl} />
+      <button style={{ margin: '1%' }} onClick={() => takeSnapshot()} >Take Snapshot</button>
+      { image && (<img src={image} alt="Snapshot" /> )}
     </div>
   );
 }
