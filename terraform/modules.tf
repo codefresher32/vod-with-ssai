@@ -1,14 +1,14 @@
 module "lambda-functions" {
-  depends_on                          = [module.media-convert]
-  source                              = "./lambda-functions"
-  prefix                              = var.prefix
-  vod_source_bucket_name              = module.vod_source.vod_source_bucket_name
-  mediaconvert_job_template_name      = module.media-convert.media_convert_job_template_name
-  mediaconvert_endpoint               = var.mediaconvert_endpoint
-  mediaconvert_role_arn               = module.media-convert.media_convert_role_arn 
-  sourceUploadFolder                  = var.sourceUploadFolder
-  vod_source_cloudfront_domain        = module.vod_source.vod_source_cloudfront_domain
-  vod_source_bucket_arn               = module.vod_source.vod_source_bucket_arn
+  depends_on                     = [module.media-convert]
+  source                         = "./lambda-functions"
+  prefix                         = var.prefix
+  vod_source_bucket_name         = module.vod_source.vod_source_bucket_name
+  mediaconvert_job_template_name = module.media-convert.media_convert_job_template_name
+  mediaconvert_endpoint          = var.mediaconvert_endpoint
+  mediaconvert_role_arn          = module.media-convert.media_convert_role_arn
+  sourceUploadFolder             = var.sourceUploadFolder
+  vod_source_cloudfront_domain   = module.vod_source.vod_source_cloudfront_domain
+  vod_source_bucket_arn          = module.vod_source.vod_source_bucket_arn
 
   providers = {
     aws     = aws
@@ -47,5 +47,14 @@ module "vod_source" {
     aws            = aws
     aws.iam        = aws.iam
     aws.cloudfront = aws.cloudfront
+  }
+}
+
+module "dynamodb_playlists" {
+  source = "./dynamodb-playlists"
+  prefix = var.prefix
+  providers = {
+    aws     = aws
+    aws.iam = aws.iam
   }
 }
