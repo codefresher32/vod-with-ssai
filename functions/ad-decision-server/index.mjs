@@ -67,10 +67,10 @@ const generateAdContent = async ({ durationsInSeconds, adPreferences, availIndex
     const durations = durationsInSeconds.split('_').map((durationInSecond) => Number(durationInSecond));
     const preferences = adPreferences.split('_');
     const adSystem = "2.0";
-    const preferIndex = Number(availIndex)-1;
+    const preferIndex = Number(availIndex) - 1;
 
     let creatives = '';
-    if (durations.length >1 && preferences.length && durations.length === preferences.length) {
+    if (durations.length > 1 && preferences.length && durations.length === preferences.length) {
         const matchedFile = (await findAdFileByPreferencesAndDuration({ durationInSecond: durations[preferIndex], adPreference: preferences[preferIndex] })) ?? defaultFile;
         creatives = generateVastCreatives({ preference: preferences[preferIndex], duration: durations[preferIndex], fileUri: matchedFile });
     } else {

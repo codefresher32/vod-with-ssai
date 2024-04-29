@@ -1,0 +1,127 @@
+.container {
+  width: 100vw;
+}
+.playlist-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: block;
+}
+.playlist {
+  padding: 20px;
+}
+.playlist {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #fff;
+}
+.playlist-item {
+  margin-bottom: 10px;
+  color: #fff;
+}
+.playlist-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+.video-item {
+  cursor: pointer;
+}
+.video-thumbnail {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.video-title {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+.video-description {
+  font-size: 14px;
+  color: #666;
+}
+.video-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.video-player {
+  position: relative;
+  max-width: 80%;
+  max-height: 80%;
+}
+.video-player video {
+  width: 100%;
+  height: 100%;
+}
+.content-preview {
+  position: relative;
+  width: 100%;
+}
+.preview-image {
+  position: relative;
+}
+.preview-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.preview-info {
+  position: absolute;
+  top: 30%;
+  left: 5%;
+  /* Adjust the left margin here */
+  transform: translateY(-50%);
+}
+.preview-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #fff;
+  text-decoration: solid;
+  font-family: Tahoma, sans-serif;
+}
+.preview-description {
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.watch-now-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.watch-now-button:hover {
+  background-color: #ff0000;
+}
