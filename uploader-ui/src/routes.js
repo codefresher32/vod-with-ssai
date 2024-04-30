@@ -8,7 +8,7 @@ import ContentCreator from "./ContentCreator";
 const routes = createBrowserRouter([
     {
         path: "/",
-        element: <h1>Playing streams!</h1>,
+        element: <VideoPortal/>
       },
     {
         path: "/content-creator",

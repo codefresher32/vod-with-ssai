@@ -14,6 +14,7 @@ const putPlaylist = async (docClient, tableName, body) => {
         contentDescription: body?.contentDescription,
         adBreaks: body?.adBreaks,
         thumbnail: body?.thumbnail,
+        contentTitle: body?.contentTitle
       },
     });
     const resp = await docClient.send(command);
@@ -23,13 +24,19 @@ const putPlaylist = async (docClient, tableName, body) => {
   }
 };
 
-const getPlaylists = async (docClient, tableName, contentType) => {
+const getPlaylists = async ({docClient, tableName, contentType, contentId}) => {
   try {
     const command = new QueryCommand({
       TableName: tableName,
-      KeyConditionExpression: '#cType = :cType',
-      ExpressionAttributeNames: { '#cType': 'contentType' },
-      ExpressionAttributeValues: { ':cType': contentType },
+      KeyConditionExpression: contentId ? '#cType = :cType AND begins_with(#cId, :cId)' : '#cType = :cType' ,
+      ExpressionAttributeNames: { 
+        '#cType': 'contentType',
+        ...(contentId && { '#cId': 'contentId' }),
+      },
+      ExpressionAttributeValues: {
+         ':cType': contentType,
+         ...(contentId && { ':cId': contentId }),
+      },
     });
     const resp = await docClient.send(command);
     return resp;
@@ -48,7 +55,10 @@ export const handler = async(event) => {
   if (body.action === 'putItem') {
     resp = await putPlaylist(docClient, PLAYLISTS_DYNAMODB_TABLE, body);
   } else if (body.action === 'getItem' && !body.contentId) {
-    resp = await getPlaylists(docClient, PLAYLISTS_DYNAMODB_TABLE, body.contentType);
+    resp = await getPlaylists({docClient, tableName: PLAYLISTS_DYNAMODB_TABLE, contentType: body.contentType});
+  }
+  else if (body.action === 'getItem' && body.contentId.length > 0) {
+    resp = await getPlaylists({docClient, tableName: PLAYLISTS_DYNAMODB_TABLE, contentType: body.contentType, contentId: body.contentId});
   } else {
     throw new Error('Unknown Dynamodb Method');
   }

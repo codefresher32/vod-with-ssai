@@ -1,57 +1,76 @@
 import React from 'react';
 import './VideoPortal.css';
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import VideoPlayer from './VideoPlayer';
+import { Link } from 'react-router-dom';
 
-const videos = [
-    {
-        title: "Create profiles for kids fjgkfgjfkjg",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/1072179/pexels-photo-1072179.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-        url: 'https://d1uvm016ude8zr.cloudfront.net/outputs/videoplayback/hls/videoplayback.m3u8?ads.durationsInSeconds=10_10&ads.adPreferences=sports_sports'
-    },
-    {
-        title: "Create profiles for kidsffgfgf",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/1072179/pexels-photo-1072179.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-    },
-    {
-        title: "Create profiles for kids ffg fgfgf",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-    },
-    {
-        title: "Create profiles for kids",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-    },
-    {
-        title: "Create profiles for kids",
-        description: "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
-        thumbnail: "https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-    }
-]
 
 const VideoPortal = ({ onVideoClick }) => {
-    const [selectedVideo, setSelectedVideo] = useState(null);
+    const [playbackUrl, setPlaybackUrl] = useState("");
+    const [videos, setVideos] = useState([]);
+    const contentCuratorLambdaUrl = "https://y5gls2sog2wcwy6ev76mabxv340yqisz.lambda-url.eu-north-1.on.aws";
+    const playbackBaseUrl = "https://d1uvm016ude8zr.cloudfront.net";
 
-    const openVideoPopup = (video) => {
-        setSelectedVideo(video);
+    useEffect(() => {
+        console.log("here")
+        loadContent();
+    }, []);
+
+    const loadContent = async () => {
+        const contentBody = {
+            contentType: 'Movies',
+            action: 'getItem'
+        }
+        try {
+            const response = await fetch(`${contentCuratorLambdaUrl}`, {
+                method: "POST",
+                body: JSON.stringify(contentBody),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            const data = await response.json();
+            const contentsFromDB = data?.Items;
+            console.log(contentsFromDB);
+            setVideos(contentsFromDB);
+
+        } catch (error) {
+            return console.log(error);
+        }
+    }
+
+    const openVideoPopup = (content) => {
+        const manifestUrl = `${playbackBaseUrl}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
+        if (content.adBreaks?.length) {
+            const playerVariables = `ads.durationsInSeconds=${content.adBreaks.map((ad) => ad.durationInSecond).join('_')}&ads.adPreferences=${content.adBreaks.map((ad) => ad.adPreference).join('_')}`;
+            setPlaybackUrl(`${manifestUrl}?${playerVariables}`);
+        } else {
+            setPlaybackUrl(manifestUrl);
+        }
     };
 
     const closeVideoPopup = () => {
-        setSelectedVideo(null);
+        setPlaybackUrl('');
     };
     return (
         <div className={`container}`}>
+
             <div className="content-preview">
                 <div className="preview-image">
-                    <img src={videos[0].thumbnail} alt={videos[0].title} />
-                    <div className="preview-info">
-                        <h2 className="preview-title">{videos[0].title}</h2>
-                        <p className="preview-description">{videos[0].description}</p>
-                        <button className="watch-now-button">Watch Now</button>
-                    </div>
+                    {videos.length && (
+                        <>
+                            <img src={videos[0].thumbnail} alt={videos[0].contentTitle} />
+                            <div className="preview-info">
+                                <h2 className="preview-title">{videos[0].contentTitle.toUpperCase()}</h2>
+                                <p className="preview-description">{videos[0].contentDescription}</p>
+                                <button className="watch-now-button" onClick={() => openVideoPopup(videos[0])}>Watch Now</button>
+                            </div>
+                        </>
+
+                    )}
+                    <Link to="/content-creator">
+                        <button className="create-content-button">Create Your Content</button>
+                    </Link>
                 </div>
             </div>
             <div className="playlist-overlay">
@@ -63,8 +82,8 @@ const VideoPortal = ({ onVideoClick }) => {
                                 <div className="video-item" key={index} onClick={() => openVideoPopup(video)}>
                                     <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
                                     <div className="video-info">
-                                        <h3 className="video-title">{video.title}</h3>
-                                        <p className="video-description">{video.description}</p>
+                                        <h3 className="video-title">{video.contentTitle.toUpperCase()}</h3>
+                                        <p className="video-description">{video.contentDescription}</p>
                                     </div>
                                 </div>
                             ))}
@@ -72,11 +91,11 @@ const VideoPortal = ({ onVideoClick }) => {
                     </div>
                 </div>
             </div>
-            {selectedVideo && (
+            {playbackUrl.length && (
                 <div className="video-popup">
                     <div className="video-overlay" onClick={closeVideoPopup}></div>
                     <div className="video-player">
-                        <VideoPlayer manifestUrl={selectedVideo.url} />
+                        <VideoPlayer manifestUrl={playbackUrl} />
                     </div>
                 </div>
             )}

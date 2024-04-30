@@ -97,6 +97,7 @@
   position: absolute;
   top: 30%;
   left: 5%;
+  width: 30%;
   /* Adjust the left margin here */
   transform: translateY(-50%);
 }
@@ -124,4 +125,20 @@
 }
 .watch-now-button:hover {
   background-color: #ff0000;
+}
+.create-content-button {
+  position: absolute;
+  top: 50%;
+  left: 98%;
+  width: 13%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  background-color: #ff5733; /* Choose your desired color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 2; /* Ensure the button is above other elements */
+  position: fixed;
 }
