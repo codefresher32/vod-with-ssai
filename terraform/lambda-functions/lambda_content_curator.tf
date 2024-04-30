@@ -32,10 +32,15 @@ resource "aws_lambda_function" "content_curator_lambda" {
 
   environment {
     variables = {
-      VOD_SOURCE_BUCKET_CDN_DOMAIN     = var.vod_source_cloudfront_domain
-      VOD_SOURCE_BUCKET                = var.vod_source_bucket_name
-      PLAYLISTS_DYNAMODB_TABLE         = "${var.prefix}-video-playlists"
+      VOD_SOURCE_BUCKET_CDN_DOMAIN = var.vod_source_cloudfront_domain
+      VOD_SOURCE_BUCKET            = var.vod_source_bucket_name
+      PLAYLISTS_DYNAMODB_TABLE     = "${var.prefix}-video-playlists"
     }
+  }
+
+  tags = {
+    service   = var.prefix
+    team_name = var.team_name
   }
 }
 
@@ -86,9 +91,9 @@ resource "aws_iam_role_policy_attachment" "content_curator_lambda_policy_attachm
 data "aws_iam_policy_document" "dynamo_content_curator_permissions" {
   provider = aws.iam
   statement {
-    effect    = "Allow"
+    effect = "Allow"
 
-    actions   = [
+    actions = [
       "dynamodb:PutItem",
       "dynamodb:UpdateItem",
       "dynamodb:Query",

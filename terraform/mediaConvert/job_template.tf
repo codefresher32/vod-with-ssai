@@ -23,7 +23,7 @@ locals {
     ]
   ])
   hls_output_group_rendered = [jsondecode(templatefile("${path.module}/templates/hls-output-group.json.tpl", {
-    outputs        = jsonencode(concat(local.hls_video_outputs_rendered, local.hls_audio_outputs_rendered))
+    outputs = jsonencode(concat(local.hls_video_outputs_rendered, local.hls_audio_outputs_rendered))
   }))]
   settings_rendered = templatefile("${path.module}/templates/jobtemplate-settings.json.tpl", {
     output_groups = jsonencode(concat(local.hls_output_group_rendered))
@@ -40,6 +40,7 @@ resource "aws_cloudformation_stack" "mediaconvert_job_template" {
       status_update_interval = var.status_update_interval
       category               = var.category
       description            = var.description
+      tags                   = jsonencode({ team_name: var.team_name, service: var.prefix })
     }
   )
 }

@@ -102,4 +102,9 @@ resource "aws_cloudfront_distribution" "cf_distribution_mediatailor" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+
+  tags = {
+    service   = var.prefix
+    team_name = var.team_name
+  }
 }

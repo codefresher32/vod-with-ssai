@@ -4,11 +4,9 @@ Deploy a simple aws video pipeline
 ![System Architecture](docs/diagrams/ssai_system_architecture.png)
 
 # Cloudformation Docs
-[MediaConnect](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_MediaConnect.html)
+[MediaConvert](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_MediaConvert.html)
 
-[MediaLive](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_MediaLive.html)
-
-[MediaPackage](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_MediaPackage.html)
+[MediaTailor](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_MediaTailor.html)
 
 # Prerequisites
 - [Docker](https://www.docker.com/get-started)

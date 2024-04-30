@@ -2,7 +2,7 @@ resource "aws_cloudfront_origin_access_identity" "vod_source_origin_access_ident
   comment = "${var.prefix}-origin-access-identity "
 }
 resource "aws_cloudfront_distribution" "vod_source_cf_distribution" {
-  comment    = "${var.prefix}-vod-source"
+  comment = "${var.prefix}-vod-source"
 
   origin {
     domain_name = aws_s3_bucket.vod_source.bucket_regional_domain_name
@@ -22,7 +22,7 @@ resource "aws_cloudfront_distribution" "vod_source_cf_distribution" {
     compress                   = var.cache_behavior_compress
     viewer_protocol_policy     = var.viewer_protocol_policy
     response_headers_policy_id = var.cors_with_preflight_response_header_policy_id
-    smooth_streaming = var.smooth_streaming
+    smooth_streaming           = var.smooth_streaming
   }
   restrictions {
     geo_restriction {
@@ -31,6 +31,11 @@ resource "aws_cloudfront_distribution" "vod_source_cf_distribution" {
   }
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+
+  tags = {
+    service   = var.prefix
+    team_name = var.team_name
   }
 }
 

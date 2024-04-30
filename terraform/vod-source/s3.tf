@@ -1,7 +1,8 @@
 resource "aws_s3_bucket" "vod_source" {
   bucket = "${var.prefix}-vod-source"
   tags = {
-    Environment = "Dev"
+    service   = var.prefix
+    team_name = var.team_name
   }
   force_destroy = true
 }

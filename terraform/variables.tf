@@ -1,4 +1,5 @@
 variable "prefix" {}
+variable "team_name" {}
 variable "uploader_ui_port" {}
 variable "mediaconvert_endpoint" {}
 variable "sourceUploadFolder" {}

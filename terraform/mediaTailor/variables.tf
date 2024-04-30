@@ -2,6 +2,7 @@ variable "prefix" {
   type        = string
   description = "AWS Resources name prefix"
 }
+variable "team_name" {}
 variable "mpd_location" {
   type    = string
   default = "DISABLED"

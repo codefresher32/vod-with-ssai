@@ -17,6 +17,7 @@ resource "aws_dynamodb_table" "video_playlists_dynamodb_table" {
   }
 
   tags = {
-    service = var.prefix
+    service   = var.prefix
+    team_name = var.team_name
   }
 }

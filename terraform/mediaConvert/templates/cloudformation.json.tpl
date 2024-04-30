@@ -8,7 +8,8 @@
         "Description": "${description}",
         "Name": "${name}",
         "Queue": "${queue_arn}",
-        "SettingsJson": ${settings_json}
+        "SettingsJson": ${settings_json},
+        "Tags": ${tags}
       }
     }
   },

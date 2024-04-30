@@ -3,6 +3,7 @@ resource "aws_media_convert_queue" "job_queue" {
   pricing_plan = "ON_DEMAND"
 
   tags = {
-    Environment = "Dev"
+    service   = var.prefix
+    team_name = var.team_name
   }
 }

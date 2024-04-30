@@ -34,9 +34,14 @@ resource "aws_lambda_function" "ad_decision_server" {
 
   environment {
     variables = {
-      VOD_SOURCE_BUCKET_CDN_DOMAIN     = var.vod_source_cloudfront_domain
-      VOD_SOURCE_BUCKET                = var.vod_source_bucket_name
+      VOD_SOURCE_BUCKET_CDN_DOMAIN = var.vod_source_cloudfront_domain
+      VOD_SOURCE_BUCKET            = var.vod_source_bucket_name
     }
+  }
+
+  tags = {
+    service   = var.prefix
+    team_name = var.team_name
   }
 }
 resource "aws_cloudwatch_log_group" "ad_decision_server_lambda_logGroup" {

@@ -18,7 +18,7 @@ resource "aws_cloudformation_stack" "mediatailor" {
       slate_ad_url                  = var.slate_ad_url
       transcode_profile_name        = var.transcode_profile_name
       video_content_source_url      = "https://${var.vod_source_cloudfront_domain}"
-      tags                          = jsonencode([{ Key = "team_name", Value = "simple_elemental" }, { Key = "environment", Value = "production" }])
+      tags                          = jsonencode([{ Key = "team_name", Value = var.team_name }, { Key = "service", Value = var.prefix }])
     }
   )
 }

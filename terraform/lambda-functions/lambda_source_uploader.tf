@@ -38,6 +38,11 @@ resource "aws_lambda_function" "vod_source_uploader" {
       SOURCE_UPLOAD_FOLDER = var.sourceUploadFolder
     }
   }
+
+  tags = {
+    service   = var.prefix
+    team_name = var.team_name
+  }
 }
 resource "aws_cloudwatch_log_group" "vod_source_lambda_logGroup" {
   name              = "/aws/lambda/${aws_lambda_function.vod_source_uploader.function_name}"

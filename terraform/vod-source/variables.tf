@@ -1,4 +1,5 @@
 variable "prefix" {}
+variable "team_name" {}
 variable "uploader_ui_port" {}
 variable "s3_cors_max_age_seconds" {
   type    = number
@@ -34,10 +35,10 @@ variable "cors_with_preflight_response_header_policy_id" {
   type = string
 }
 variable "smooth_streaming" {
-  type = bool
+  type    = bool
   default = true
 }
 variable "cache_behavior_compress" {
-  type = bool
+  type    = bool
   default = true
 }

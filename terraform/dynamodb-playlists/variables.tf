@@ -3,6 +3,8 @@ variable "prefix" {
   description = "AWS Resources name prefix"
 }
 
+variable "team_name" {}
+
 variable "playlists_table_billing_mode" {
   default = "PROVISIONED"
 }

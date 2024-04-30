@@ -3,6 +3,8 @@ variable "prefix" {
   description = "AWS Resources name prefix"
 }
 
+variable "team_name" {}
+
 variable "job_template_suffix" {
   type    = string
   default = "hls-only"

@@ -7,6 +7,9 @@ variable "prefix" {
 variable "sourceUploadFolder" {
   default = "input-source"
 }
+variable "team_name" {
+  default = "Tears of Stream"
+}
 
 terraform {
   required_providers {
@@ -46,6 +49,7 @@ module "aws_elemental_video_pipeline" {
   uploader_ui_port      = var.uploader_ui_port
   mediaconvert_endpoint = var.mediaconvert_endpoint
   prefix                = var.prefix
+  team_name             = var.team_name
   sourceUploadFolder    = var.sourceUploadFolder
 
   providers = {
