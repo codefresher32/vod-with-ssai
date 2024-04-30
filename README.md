@@ -1,6 +1,7 @@
 # Simple Elemental Video
 Deploy a simple aws video pipeline
 
+![System Architecture](docs/diagrams/ssai_system_architecture.png)
 
 # Cloudformation Docs
 [MediaConnect](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_MediaConnect.html)
