@@ -142,3 +142,16 @@
   z-index: 2; /* Ensure the button is above other elements */
   position: fixed;
 }
+
+.watch-now-button-sm {
+  padding: 2px 2px;
+  font-size: 15px;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+}
+.watch-now-button-sm:hover {
+  background-color: #ff0000;
+}

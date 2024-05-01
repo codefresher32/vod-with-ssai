@@ -10,9 +10,10 @@ const VideoPortal = ({ onVideoClick }) => {
     const [videos, setVideos] = useState([]);
     const contentCuratorLambdaUrl = "https://y5gls2sog2wcwy6ev76mabxv340yqisz.lambda-url.eu-north-1.on.aws";
     const playbackBaseUrl = "https://d1uvm016ude8zr.cloudfront.net";
+    const adFreeBaseUrl = "https://djztwzqnm27yi.cloudfront.net";
+    const [hoveredIndex, setHoveredIndex] = useState();
 
     useEffect(() => {
-        console.log("here")
         loadContent();
     }, []);
 
@@ -79,8 +80,12 @@ const VideoPortal = ({ onVideoClick }) => {
                         <h2 className="playlist-title">Your Playlist</h2>
                         <div className="video-list">
                             {videos.map((video, index) => (
-                                <div className="video-item" key={index} onClick={() => openVideoPopup(video)}>
-                                    <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
+                                <div className="video-item" key={index} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(-999)} >
+
+                                    <img src={video.thumbnail} alt={video.title} className="video-thumbnail" onClick={() => openVideoPopup(video)} />
+                                    {hoveredIndex === index && (
+                                        <button className="watch-now-button-sm" onClick={() => setPlaybackUrl(`${adFreeBaseUrl}/outputs/${video.contentId}/hls/${video.contentId}.m3u8`)}>Play as Ad Free</button>
+                                    )}
                                     <div className="video-info">
                                         <h3 className="video-title">{video.contentTitle.toUpperCase()}</h3>
                                         <p className="video-description">{video.contentDescription}</p>
@@ -104,3 +109,6 @@ const VideoPortal = ({ onVideoClick }) => {
 };
 
 export default VideoPortal;
+
+
+//aws mediatailor tag-resource --resource-arn arn:aws:mediatailor:eu-central-1:786994645791:playbackConfiguration/simple-elemental-vod-ads --tags team_name=simple_elemental | cat
