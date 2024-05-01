@@ -1,5 +1,5 @@
 # Simple Elemental Video
-Deploy a simple aws video pipeline
+Deploy a server side ad insertion(SSAI) aws video pipeline
 
 ![System Architecture](docs/diagrams/ssai_system_architecture.png)
 
@@ -22,7 +22,7 @@ eval "$(aws configure export-credentials --profile your-profile-name --format en
 
 Export a region
 ```sh
-export AWS_REGION=eu-west-1
+export AWS_REGION=eu-north-1
 ```
 
 # Run Everything at Once
@@ -30,24 +30,12 @@ export AWS_REGION=eu-west-1
 
 Run the following command from the terminal
 ```sh
-make deploy
+make tf-deploy
 ```
-This should print a playback url
-
-# Playback
-You can use [hls.js](https://hlsjs.video-dev.org/demo) to playback your video
-or run the following command to get a prepared url
-
-
-```sh
-make print-hls-playback-url
-```
+This should print a mediatailor domain along with other things
 
 # Destroy Everything
 Run the following command from the terminal
 ```sh
-make destroy
+make tf-destroy
 ```
-
-
-https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/mediaconvert/
