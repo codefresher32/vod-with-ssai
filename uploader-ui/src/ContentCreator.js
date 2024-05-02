@@ -11,9 +11,9 @@ const ContentCreator = () => {
   const [adBreaks, setAdBreaks] = useState([]);
   const [playbackUrl, setPlaybackUrl] = useState('');
   const [uploaded, setUploaded] = useState(false);
-  const adPreferences = ['sports', 'travel'];
+  const adPreferences = ['craftsmen', 'sports','shows'];
   const contentTypes = ['Shows', 'Dramas', 'Movies'];
-  const initialContent = { contentId: '', contentDescription: '', contentType: '', thumbnail: '', contentTitle:'' };
+  const initialContent = { contentId: '', contentDescription: '', contentType: '', thumbnail: '', contentTitle: '' };
   const [content, setContent] = useState(initialContent);
   const [canUpdateContent, setCanUpdateContent] = useState(false);
   const [wantToReProcess, setWantToReProcess] = useState(false);
@@ -21,7 +21,7 @@ const ContentCreator = () => {
 
 
   const adsItem = {
-    adPreference: 'sports',
+    adPreference: '',
     startTimeInSecond: 0,
     durationInSecond: 10
   }
@@ -243,7 +243,11 @@ const ContentCreator = () => {
     setTimeout(() => {
       const manifestUrl = `${playbackBaseUrl}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
       if (adBreaks.length) {
-        const playerVariables = `ads.durationsInSeconds=${adBreaks.map((ad) => ad.durationInSecond).join('_')}&ads.adPreferences=${adBreaks.map((ad) => ad.adPreference).join('_')}`;
+        const customizedAdBreaks = adBreaks.map((adBreak) => ({
+          ...adBreak,
+          adPreference: adBreak.adPreference.startsWith('http') ? `uri*${adBreak.adPreference}` : adBreak.adPreference
+        }));
+        const playerVariables = `ads.durationsInSeconds=${customizedAdBreaks.map((ad) => ad.durationInSecond).join('_')}&ads.adPreferences=${customizedAdBreaks.map((ad) => ad.adPreference).join('_')}`;
         setPlaybackUrl(`${manifestUrl}?${playerVariables}`);
       } else {
         setPlaybackUrl(manifestUrl);
@@ -256,7 +260,7 @@ const ContentCreator = () => {
     <div className="content-creator" style={{ padding: '2%' }}>
       <div>
         <Link to="/">
-            <button>Go To PlayList</button>
+          <button>Go To PlayList</button>
         </Link>
       </div>
       <input type="file" onChange={(event) => onFileChange(event)}></input>
@@ -270,7 +274,7 @@ const ContentCreator = () => {
       />
       <div style={{ marginTop: '1%' }}>
         <label htmlFor="ContentId">Content Id: </label>
-        <input type="text" style={{ marginLeft: '5.2%' }} value={content.contentId} name="contentId" onChange={(event) => { setContent({ ...content, contentId: event.target.value}); setCanUpdateContent(false) }} disabled={(uploaded || canUpdateContent ===true)} />
+        <input type="text" style={{ marginLeft: '5.2%' }} value={content.contentId} name="contentId" onChange={(event) => { setContent({ ...content, contentId: event.target.value }); setCanUpdateContent(false) }} disabled={(uploaded || canUpdateContent === true)} />
       </div>
       <div style={{ marginTop: '1%' }}>
         <label htmlFor="ContentTitle" style={{ marginEnd: '100px' }}>Content Title: </label>
@@ -294,12 +298,15 @@ const ContentCreator = () => {
         adBreaks.map((adBreak, index) => {
           return (
             <div style={{ marginBottom: '1%' }} key={index}>
-              <label htmlFor="adPreference">Ad Preference: </label>
-              <select name="adPreference" id="adPreference" style={{ marginLeft: '4%', marginTop: '1%', width: '10%' }} onChange={(event) => updateAdBreaks(index, event.target.value, 'adPreference')} value={adBreaks[index].adPreference}>
-                {adPreferences.map((item, index) => (
-                  <option key={index} value={item}>{item}</option>
-                ))}
-              </select>
+                <label htmlFor="adPreference">Ad Preference: </label>
+                <select name="adPreference" id="adPreference" style={{ marginLeft: '4%', marginTop: '1%', width: '10%' }} onChange={(event) => updateAdBreaks(index, event.target.value, 'adPreference')} value={adBreaks[index].adPreference}>
+                  {adPreferences.map((item, index) => (
+                    <option key={index} value={item}>{item}</option>
+                  ))}
+                </select>
+                or 
+                <label htmlFor="adPreference"> Uri: </label>
+                <input type="text" style={{ margin: '1%' }} value={adBreak.adPreference.startsWith('http') ? adBreak.adPreference : ''} name={adBreak.adPreferences} onChange={(event) => updateAdBreaks(index, event.target.value, 'adPreference')} />
 
               <label htmlFor="start time">Start Time: </label>
               <input type="number" style={{ margin: '1%' }} value={adBreak.startTimeInSecond} name={adBreak.startTimeInSecond} onChange={(event) => updateAdBreaks(index, +event.target.value, 'startTimeInSecond')} disabled={((canUpdateContent && wantToReProcess) || uploaded) === false} />
@@ -315,16 +322,16 @@ const ContentCreator = () => {
       <button style={{ margin: '1%' }} onClick={() => startVideoProcessing()} disabled={(uploaded || canUpdateContent) === false} > Create Content </button>
       <button style={{ margin: '1%' }} onClick={() => loadContent()} disabled={(content.contentId.length > 0 && uploaded === false) === false} > Find and Edit content</button>
       <button
-          className="btn btn-danger"
-          disabled={canUpdateContent === false}
-          onClick={() => {
-            if (window.confirm("Are you sure to reprocess?")) {
-              setWantToReProcess(true)
-            }
-          }}
-        >
-          Re Process
-        </button>
+        className="btn btn-danger"
+        disabled={canUpdateContent === false}
+        onClick={() => {
+          if (window.confirm("Are you sure to reprocess?")) {
+            setWantToReProcess(true)
+          }
+        }}
+      >
+        Re Process
+      </button>
       <hr />
 
       <button disabled={(uploaded || canUpdateContent) === false} style={{ margin: '1%' }} onClick={() => setPlayer()}>Play Your Content</button>

@@ -42,19 +42,18 @@ const findAdFileByPreferencesAndDuration = async ({ durationInSecond, adPreferen
     }
 
 }
-const generateVastCreatives = ({ preference = 'default', duration = 30, fileUri = 'ads/vimond_video_services_travel_30.mp4' }) => {
+const generateVastCreatives = ({ preference = 'default', duration = 30, fileUri }) => {
     const mediaFileDeliveryType = "progressive";
     const mediaFileType = "video/mp4";
     const mediaFileHeight = "1080";
     const mediaFileWidth = "1920";
-    const { VOD_SOURCE_BUCKET_CDN_DOMAIN } = process.env;
 
     const creativeContent =
         `<Creative>
             <Linear>
                 <Duration>${duration}</Duration>
                 <MediaFiles>
-                    <MediaFile delivery="${mediaFileDeliveryType}" type="${mediaFileType}" width="${mediaFileWidth}" height="${mediaFileHeight}">https://${VOD_SOURCE_BUCKET_CDN_DOMAIN}/${fileUri}</MediaFile>
+                    <MediaFile delivery="${mediaFileDeliveryType}" type="${mediaFileType}" width="${mediaFileWidth}" height="${mediaFileHeight}">${fileUri}</MediaFile>
                 </MediaFiles>
             </Linear>
         </Creative>
@@ -68,13 +67,20 @@ const generateAdContent = async ({ durationsInSeconds, adPreferences, availIndex
     const preferences = adPreferences.split('_');
     const adSystem = "2.0";
     const preferIndex = Number(availIndex) - 1;
+    const { VOD_SOURCE_BUCKET_CDN_DOMAIN } = process.env;
+    const defaultFile = 'ads/vimond_video_services_travel_30.mp4';
 
     let creatives = '';
     if (durations.length > 1 && preferences.length && durations.length === preferences.length) {
-        const matchedFile = (await findAdFileByPreferencesAndDuration({ durationInSecond: durations[preferIndex], adPreference: preferences[preferIndex] })) ?? defaultFile;
-        creatives = generateVastCreatives({ preference: preferences[preferIndex], duration: durations[preferIndex], fileUri: matchedFile });
+        if(preferences[preferIndex].includes('uri*')){
+            const fileUri = preferences[preferIndex].split('uri*').pop();
+            creatives = generateVastCreatives({fileUri });
+        }else{
+            const matchedFile = (await findAdFileByPreferencesAndDuration({ durationInSecond: durations[preferIndex], adPreference: preferences[preferIndex] })) ?? defaultFile;
+            creatives = generateVastCreatives({ preference: preferences[preferIndex], duration: durations[preferIndex], fileUri: `https://${VOD_SOURCE_BUCKET_CDN_DOMAIN}/${matchedFile}` });
+        }
     } else {
-        creatives = generateVastCreatives({});
+        creatives = generateVastCreatives({fileUri: `https://${VOD_SOURCE_BUCKET_CDN_DOMAIN}/${defaultFile}`});
     }
 
     const xmlResponse = `

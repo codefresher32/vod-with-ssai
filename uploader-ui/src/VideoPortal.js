@@ -43,7 +43,11 @@ const VideoPortal = ({ onVideoClick }) => {
     const openVideoPopup = (content) => {
         const manifestUrl = `${playbackBaseUrl}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
         if (content.adBreaks?.length) {
-            const playerVariables = `ads.durationsInSeconds=${content.adBreaks.map((ad) => ad.durationInSecond).join('_')}&ads.adPreferences=${content.adBreaks.map((ad) => ad.adPreference).join('_')}`;
+            const customizedAdBreaks = content.adBreaks.map((adBreak) => ({
+                ...adBreak,
+                adPreference: adBreak.adPreference.startsWith('http') ? `uri*${adBreak.adPreference}` : adBreak.adPreference
+              }));
+            const playerVariables = `ads.durationsInSeconds=${customizedAdBreaks.map((ad) => ad.durationInSecond).join('_')}&ads.adPreferences=${customizedAdBreaks.map((ad) => ad.adPreference).join('_')}`;
             setPlaybackUrl(`${manifestUrl}?${playerVariables}`);
         } else {
             setPlaybackUrl(manifestUrl);
@@ -112,3 +116,5 @@ export default VideoPortal;
 
 
 //aws mediatailor tag-resource --resource-arn arn:aws:mediatailor:eu-central-1:786994645791:playbackConfiguration/simple-elemental-vod-ads --tags team_name=simple_elemental | cat
+
+//https://djztwzqnm27yi.cloudfront.net/ads/cmProductsAd.mp4
