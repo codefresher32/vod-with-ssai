@@ -1,3 +1,3 @@
 locals {
-  project_name = "SimpleElementalVideo"
+  project_name = "vod-with-ssai"
 }

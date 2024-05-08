@@ -1,4 +1,3 @@
-# Simple Elemental Video
 Deploy a server side ad insertion(SSAI) aws video pipeline
 
 ![System Architecture](docs/diagrams/ssai_system_architecture.png)

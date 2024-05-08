@@ -113,8 +113,3 @@ const VideoPortal = ({ onVideoClick }) => {
 };
 
 export default VideoPortal;
-
-
-//aws mediatailor tag-resource --resource-arn arn:aws:mediatailor:eu-central-1:786994645791:playbackConfiguration/simple-elemental-vod-ads --tags team_name=simple_elemental | cat
-
-//https://djztwzqnm27yi.cloudfront.net/ads/cmProductsAd.mp4

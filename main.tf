@@ -2,7 +2,7 @@
 variable "uploader_ui_port" {}
 variable "mediaconvert_endpoint" {}
 variable "prefix" {
-  default = "simple-elemental"
+  default = "vod-with-ssai"
 }
 variable "sourceUploadFolder" {
   default = "input-source"
@@ -23,7 +23,7 @@ terraform {
   }
   backend "s3" {
     bucket = "eu-north-1-dev-video-test"
-    key    = "junayed/terraform/states/simpleElemental"
+    key    = "junayed/terraform/states/vod-with-ssai"
     region = "eu-north-1"
   }
 }

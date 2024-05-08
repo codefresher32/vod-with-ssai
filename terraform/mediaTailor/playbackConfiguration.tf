@@ -4,9 +4,7 @@ locals {
 resource "aws_cloudformation_stack" "mediatailor" {
   name     = "${var.prefix}-meidatailor-vod-ads"
   provider = aws.mediatailor
-  tags = {
-    team_name = "simple_elemental"
-  }
+  
   template_body = templatefile("${path.module}/templates/mediatailor_cloudformation.json.tpl",
     {
       name                          = "${var.prefix}-vod-ads"
