@@ -8,9 +8,6 @@ import { Link } from 'react-router-dom';
 const VideoPortal = ({ onVideoClick }) => {
     const [playbackUrl, setPlaybackUrl] = useState("");
     const [videos, setVideos] = useState([]);
-    const contentCuratorLambdaUrl = "https://y5gls2sog2wcwy6ev76mabxv340yqisz.lambda-url.eu-north-1.on.aws";
-    const playbackBaseUrl = "https://d1uvm016ude8zr.cloudfront.net";
-    const adFreeBaseUrl = "https://djztwzqnm27yi.cloudfront.net";
     const [hoveredIndex, setHoveredIndex] = useState();
 
     useEffect(() => {
@@ -23,7 +20,7 @@ const VideoPortal = ({ onVideoClick }) => {
             action: 'getItem'
         }
         try {
-            const response = await fetch(`${contentCuratorLambdaUrl}`, {
+            const response = await fetch(`${process.env.REACT_APP_CONTENT_CURATOR_LAMBDA_URL}`, {
                 method: "POST",
                 body: JSON.stringify(contentBody),
                 headers: {
@@ -41,7 +38,7 @@ const VideoPortal = ({ onVideoClick }) => {
     }
 
     const openVideoPopup = (content) => {
-        const manifestUrl = `${playbackBaseUrl}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
+        const manifestUrl = `${process.env.REACT_APP_PLAYBACK_BASEURL}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
         if (content.adBreaks?.length) {
             const customizedAdBreaks = content.adBreaks.map((adBreak) => ({
                 ...adBreak,
@@ -88,7 +85,7 @@ const VideoPortal = ({ onVideoClick }) => {
 
                                     <img src={video.thumbnail} alt={video.title} className="video-thumbnail" onClick={() => openVideoPopup(video)} />
                                     {hoveredIndex === index && (
-                                        <button className="watch-now-button-sm" onClick={() => setPlaybackUrl(`${adFreeBaseUrl}/outputs/${video.contentId}/hls/${video.contentId}.m3u8`)}>Play as Ad Free</button>
+                                        <button className="watch-now-button-sm" onClick={() => setPlaybackUrl(`${process.env.REACT_APP_AD_FREE_PLAYBACK_BASEURL}/outputs/${video.contentId}/hls/${video.contentId}.m3u8`)}>Play as Ad Free</button>
                                     )}
                                     <div className="video-info">
                                         <h3 className="video-title">{video.contentTitle.toUpperCase()}</h3>

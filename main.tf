@@ -2,13 +2,13 @@
 variable "uploader_ui_port" {}
 variable "mediaconvert_endpoint" {}
 variable "prefix" {
-  default = "vod-with-ssai"
+  default = "eu-north-1-dev-vod-with-ssai"
 }
 variable "sourceUploadFolder" {
   default = "input-source"
 }
 variable "team_name" {
-  default = "Tears of Stream"
+  default = ""
 }
 
 terraform {

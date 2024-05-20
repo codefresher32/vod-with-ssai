@@ -25,11 +25,6 @@ const ContentCreator = () => {
     startTimeInSecond: 0,
     durationInSecond: 10
   }
-  const uploadLambdaUrl = "https://desn6cie5gaspaewu4j6x6qrga0ibone.lambda-url.eu-north-1.on.aws";
-  const videoEncoderLambdaUrl = "https://bxmx66km7scktscfeu2qsfji5e0hkoqc.lambda-url.eu-north-1.on.aws";
-  const playbackBaseUrl = "https://d1uvm016ude8zr.cloudfront.net";
-  const contentCuratorLambdaUrl = "https://y5gls2sog2wcwy6ev76mabxv340yqisz.lambda-url.eu-north-1.on.aws";
-
   const loadContent = async () => {
     const contentBody = {
       contentId: content.contentId,
@@ -37,7 +32,7 @@ const ContentCreator = () => {
       action: 'getItem'
     }
     setCanUpdateContent(false);
-    return fetch(`${contentCuratorLambdaUrl}`, {
+    return fetch(`${process.env.REACT_APP_CONTENT_CURATOR_LAMBDA_URL}`, {
       method: "POST",
       body: JSON.stringify(contentBody),
       headers: {
@@ -69,7 +64,7 @@ const ContentCreator = () => {
   }
 
   const getUploadIdAndFileKey = async () => {
-    return fetch(`${uploadLambdaUrl}?fileName=${content.contentId}&stage=initial&fileSizeInByte=${file.size}`, {
+    return fetch(`${process.env.REACT_APP_UPLOAD_LAMBDA_URL}?fileName=${content.contentId}&stage=initial&fileSizeInByte=${file.size}`, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -101,7 +96,7 @@ const ContentCreator = () => {
       stage: "complete",
       parts
     };
-    return fetch(uploadLambdaUrl, {
+    return fetch(process.env.REACT_APP_UPLOAD_LAMBDA_URL, {
       method: "POST",
       body: JSON.stringify(completeRequestBody),
       headers: {
@@ -168,7 +163,7 @@ const ContentCreator = () => {
       adBreaks
     }
     try {
-      const response = await fetch(videoEncoderLambdaUrl, {
+      const response = await fetch(process.env.REACT_APP_VIDEO_ENCODER_LAMBDA_URL, {
         method: "POST",
         body: JSON.stringify(payLoadForEncoder),
         headers: {
@@ -194,7 +189,7 @@ const ContentCreator = () => {
     }
     console.log(changedContent);
     try {
-      const response = await fetch(contentCuratorLambdaUrl, {
+      const response = await fetch(process.env.REACT_APP_CONTENT_CURATOR_LAMBDA_URL, {
         method: "POST",
         body: JSON.stringify(contentBody),
         headers: {
@@ -241,7 +236,7 @@ const ContentCreator = () => {
     setPlaybackUrl('');
     console.log(content);
     setTimeout(() => {
-      const manifestUrl = `${playbackBaseUrl}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
+      const manifestUrl = `${process.env.REACT_APP_PLAYBACK_BASEURL}/outputs/${content.contentId}/hls/${content.contentId}.m3u8`;
       if (adBreaks.length) {
         const customizedAdBreaks = adBreaks.map((adBreak) => ({
           ...adBreak,
@@ -321,6 +316,7 @@ const ContentCreator = () => {
       <button style={{ margin: '1%' }} onClick={() => setAdBreaks([...adBreaks, adsItem])} disabled={(uploaded || canUpdateContent) === false}> Add Ad Break </button>
       <button style={{ margin: '1%' }} onClick={() => startVideoProcessing()} disabled={(uploaded || canUpdateContent) === false} > Create Content </button>
       <button style={{ margin: '1%' }} onClick={() => loadContent()} disabled={(content.contentId.length > 0 && uploaded === false) === false} > Find and Edit content</button>
+      <button style={{ margin: '1%' }} onClick={() => saveContent(content)} disabled={(content.contentId.length > 0 && canUpdateContent === true) === false} > Edit content</button>
       <button
         className="btn btn-danger"
         disabled={canUpdateContent === false}
